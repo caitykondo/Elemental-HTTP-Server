@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
   req.setEncoding('utf8');
-    console.log(req.method);
 
     if(req.method === 'POST'){
       req.on('data', (chunk) => {
@@ -20,11 +19,9 @@ const server = http.createServer((req, res) => {
         // returns body into an object
         let reqObj = qs.parse(chunk);
 
-
       // check that file doesnt already exist
         fs.open(`public/${fileName}.html`, 'wx', (err, reqObj) => {
           if (err){
-              console.log('HAII');
             res.statusCode = 500;
             res.end('File already exists!');
           }else{
@@ -55,7 +52,6 @@ const server = http.createServer((req, res) => {
           fileNotFoundErrorHandler(res);
           return;
         }
-        // res.setHeader('Content-Type', 'text/html');
         res.write(content);
         res.end();
         return;
