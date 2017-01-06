@@ -43,63 +43,27 @@ const server = http.createServer((req, res) => {
         });
       });
     }
-    else if(req.method === 'GET'){
+    if(req.method === 'GET'){
 
       // extracts new file name from request header
       let fileArr = req.url.split('');
       fileArr.splice(0, 1);
       let fileName = fileArr.join('');
-      // check if requested page exists in public dir & return page
-      fs.open(`public/${fileName}.html`, 'r', (err, reqObj) => {
-        if (err) {
-          console.log('ERROR');
-          res.statusCode = 404;
-          res.end('No file with that name!');
-        } else {
-            fs.readFile(`public/${fileName}.html`, 'utf-8', elementTemplate(reqObj), (err, content) => {
-              if(err){
-              res.statusCode = 404;
-              res.end('Nothing is here.');
-            }else{
-              console.log(content);
-              res.statusCode = 200;
-              res.write(content);
-              res.end('elementTemplate(reqObj)');
-            }
-          });
-            // console.log('HAII');
-            // res.statusCode = 500;
-            // res.end('File already exists!');
-          }
-      });
-            // return the file: set the header and the html file as the body
 
-       // });
-          // if not return 404
+      fs.readFile(`public/${fileName}.html`, (err, content) => {
+        if( err ){
+          fileNotFoundErrorHandler(res);
+          return;
+        }
+        // res.setHeader('Content-Type', 'text/html');
+        res.write(content);
         res.end();
-      }
+        return;
+      });
+    }
 
 
 // REMEMBER TO ADD NEW PAGES TO INDEX.HTML
-
-  // GET method
-  // else if(req.method === 'GET'){
-    // console.log(fileName);
-    // for hardcoded files
-    // if(req.url === '/helium'){
-
-    //   fs.readFile('./public/helium.html', (err, content) => {
-    //     if( err ){
-    //       fileNotFoundErrorHandler(res);
-    //       return;
-    //     }
-    //     res.setHeader('Content-Type', 'text/html');
-    //     res.write(content);
-    //     res.end();
-    //     return
-    //   });
-    // }
-  // }
 });
 
 server.listen(PORT, () =>{
